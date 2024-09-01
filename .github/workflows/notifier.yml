@@ -17,7 +17,7 @@ jobs:
     - name: Get commit message and event details
       id: get_details
       run: |
-        if [ "${{ github.event_name }}" = "pull_request" ]; then
+        if [[ "${{ github.event_name }}" == "pull_request" ]]; then
           echo "event_type=Pull Request" >> $GITHUB_OUTPUT
           echo "commit_message=${{ github.event.pull_request.title }}" >> $GITHUB_OUTPUT
           echo "branch=${{ github.head_ref }}" >> $GITHUB_OUTPUT
@@ -25,7 +25,7 @@ jobs:
         else
           echo "event_type=Push" >> $GITHUB_OUTPUT
           echo "commit_message=$(git log --format=%B -n 1 ${{ github.sha }})" >> $GITHUB_OUTPUT
-          echo "branch=${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          echo "branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
           echo "base_branch=" >> $GITHUB_OUTPUT
         fi
     - name: Send Telegram Message
